@@ -61,7 +61,6 @@ const insecurity = require('./lib/insecurity')
 const models = require('./models')
 const datacreator = require('./data/datacreator')
 const app = express()
-const server = require('http').Server(app)
 const appConfiguration = require('./routes/appConfiguration')
 const captcha = require('./routes/captcha')
 const trackOrder = require('./routes/trackOrder')
@@ -86,6 +85,21 @@ const deluxe = require('./routes/deluxe')
 const memory = require('./routes/memory')
 const locales = require('./data/static/locales')
 const i18n = require('i18n')
+const afs = require('fs').promises
+const http = require('http')
+const https = require('https')
+
+const server = createServer()
+async function createServer() {
+  try {
+    return https.createServer({
+      key: await afs.readFile('../localhost.key', 'utf8'),
+      cert: await afs.readFile('../localhost.crt', 'utf8')
+    }, app);
+  } catch (err) {
+    return http.createServer(app)
+  }
+}
 
 require('./lib/startup/restoreOverwrittenFilesWithOriginals')()
 require('./lib/startup/cleanupFtpFolder')()
@@ -502,9 +516,9 @@ app.use(errorhandler())
 exports.start = async function (readyCallback) {
   await models.sequelize.sync({ force: true })
   await datacreator()
-  const port = process.env.PORT || config.get('server.port')
+  const port = process.env.PORT || config.get('server.port');
 
-  server.listen(port, () => {
+  (await server).listen(port, () => {
     logger.info(colors.cyan(`Server listening on port ${port}`))
     require('./lib/startup/registerWebsocketEvents')(server)
     if (readyCallback) {
@@ -516,9 +530,9 @@ exports.start = async function (readyCallback) {
   require('./lib/startup/customizeEasterEgg')()
 }
 
-exports.close = function (exitCode) {
+exports.close = async function (exitCode) {
   if (server) {
-    server.close()
+    (await server).close()
   }
   if (exitCode !== undefined) {
     process.exit(exitCode)
