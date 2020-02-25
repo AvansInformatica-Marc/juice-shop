@@ -1,1 +1,2 @@
 # JuiceShop [![Node.js CI](https://github.com/AvansInformatica-Marc/juice-shop/workflows/Node.js%20CI/badge.svg)](https://github.com/AvansInformatica-Marc/juice-shop/actions?query=workflow%3A%22Node.js+CI%22)
+You must serve this application over https if you want to use login functionality. If you're testing the application on a local machine, you can [create certificates for localhost](https://letsencrypt.org/docs/certificates-for-localhost/). Place the files as `localhost.crt` and `localhost.key` in the directory **above** the project root directory.
