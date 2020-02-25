@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
     this.user.password = this.passwordControl.value
     this.userService.login(this.user).subscribe((authentication: any) => {
       localStorage.setItem('token', authentication.token)
-      this.cookieService.put('token', authentication.token)
+      this.cookieService.put('token', authentication.token, { secure: true })
       sessionStorage.setItem('bid', authentication.bid)
       this.userService.isLoggedIn.next(true)
       this.router.navigate(['/search'])

@@ -26,7 +26,7 @@ export class OAuthComponent implements OnInit {
 
   login (profile: any) {
     this.userService.login({ email: profile.email, password: btoa(profile.email.split('').reverse().join('')), oauth: true }).subscribe((authentication) => {
-      this.cookieService.put('token', authentication.token)
+      this.cookieService.put('token', authentication.token, { secure: true })
       localStorage.setItem('token', authentication.token)
       sessionStorage.setItem('bid', authentication.bid)
       this.userService.isLoggedIn.next(true)
