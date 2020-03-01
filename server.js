@@ -497,7 +497,14 @@ app.use(angular())
 
 /* Error Handling */
 app.use(verify.errorHandlingChallenge())
-app.use(errorhandler())
+if (process.env.NODE_ENV === 'development') {
+  // only use in development
+  app.use(errorhandler())
+} else {
+  app.use((error, req, res, next) => {
+    res.status(500).send(error instanceof Error ? `Error: ${error.message}` : "Error")
+  })
+}
 
 exports.start = async function (readyCallback) {
   await models.sequelize.sync({ force: true })
