@@ -257,6 +257,13 @@ app.use('/api/BasketItems/:id', insecurity.isAuthorized())
 app.use('/api/Feedbacks/:id', insecurity.isAuthorized())
 /* Users: Only POST is allowed in order to register a new user */
 app.get('/api/Users', insecurity.isAuthorized())
+app.post('/api/Users', (req, res, next) => {
+  if(req.body.role === 'customer' || req.body.role === undefined) {
+    next()
+  } else {
+    next(new Error("Roles for new users must be 'customer'"))
+  }
+})
 app.route('/api/Users/:id')
   .get(insecurity.isAuthorized())
   .put(insecurity.denyAll()) // Updating users is forbidden to make the password change challenge harder
