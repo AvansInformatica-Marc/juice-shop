@@ -39,7 +39,7 @@ const authorizedRedirectURIs: any = {
 })
 export class LoginComponent implements OnInit {
 
-  public emailControl = new FormControl('', [Validators.required])
+  public emailControl = new FormControl('', [Validators.required, Validators.email])
   public passwordControl = new FormControl('', [Validators.required])
   public hide = true
   public user: any

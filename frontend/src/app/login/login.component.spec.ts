@@ -85,11 +85,11 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy()
   })
 
-  it('should have email as compulsory' , () => {
+  it('should not have email as compulsory' , () => {
     component.emailControl.setValue('')
     expect(component.emailControl.valid).toBeFalsy()
     component.emailControl.setValue('Value')
-    expect(component.emailControl.valid).toBe(true)
+    expect(component.emailControl.valid).toBeFalsy()
   })
 
   it('should have password as compulsory' , () => {
