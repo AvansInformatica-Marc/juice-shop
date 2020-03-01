@@ -38,7 +38,7 @@
 
       <a class="primary-link forgot-pw" routerLink="/forgot-password" translate>FORGOT_PASSWORD</a>
 
-      <button type="submit" id="loginButton" [disabled]="!emailControl.value||!passwordControl.value" mat-raised-button
+      <button type="submit" id="loginButton" [disabled]="emailControl.invalid||passwordControl.invalid" mat-raised-button
               color="primary" (click)="login()" aria-label="Login">
         <mat-icon>
           exit_to_app
