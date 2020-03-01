@@ -6,6 +6,7 @@ import { IImage } from 'ng-simple-slideshow'
 import { ConfigurationService } from '../Services/configuration.service'
 import { dom, library } from '@fortawesome/fontawesome-svg-core'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { FileSizeValidator } from './file-size.validator'
 
 library.add(faTwitter)
 dom.watch()
@@ -20,11 +21,20 @@ export class PhotoWallComponent implements OnInit {
   public emptyState: boolean = true
   public imagePreview: string
   public form: FormGroup = new FormGroup({
-    image: new FormControl('', { validators: [Validators.required], asyncValidators: [mimeType] }),
-    caption: new FormControl('', [Validators.required])
+    image: new FormControl('', {
+      validators: [
+        (x) => new FileSizeValidator(PhotoWallComponent.MAX_PHOTO_SIZE_BYTES).validateSize(x),
+        Validators.required
+      ],
+      asyncValidators: [mimeType]
+    }),
+    caption: new FormControl('', [
+      Validators.required
+    ])
   })
   public slideshowDataSource: IImage[] = []
   public twitterHandle = null
+  protected static MAX_PHOTO_SIZE_BYTES = 5000000
 
   constructor (private photoWallService: PhotoWallService, private configurationService: ConfigurationService) { }
 
